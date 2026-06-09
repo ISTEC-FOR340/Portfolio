@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jorge Forero | Creative Coding & XR Hub</title>
+    <style>
+        :root {
+            --bg-color: #06070a;
+            --card-bg: rgba(15, 17, 26, 0.7);
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.05);
+            
+            /* Modernized, Balanced Category Colors */
+            --color-p5: #f43f5e;       /* Rose/Coral tint */
+            --color-unity: #0ea5e9;    /* Deep Sky Blue */
+            --color-dash: #9333ea;     /* Electric Purple */
+            --color-xr: #10b981;       /* Emerald Green */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Gradientes de fundo futuristas */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(244, 63, 94, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 90% 10%, rgba(14, 165, 233, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(147, 51, 234, 0.03) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* Container Principal (Centered) */
+        .container {
+            max-width: 1100px;
+            padding: 5rem 2rem;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #64748b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Secções */
+        .category-section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .cat-p5 .category-title::before { background-color: var(--color-p5); }
+        .cat-unity .category-title::before { background-color: var(--color-unity); }
+        .cat-dash .category-title::before { background-color: var(--color-dash); }
+        .cat-xr .category-title::before { background-color: var(--color-xr); }
+
+        .repo-link {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .repo-link:hover {
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* Grid & Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-meta {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1rem;
+        }
+
+        .cat-p5 .card-meta { color: var(--color-p5); }
+        .cat-unity .card-meta { color: var(--color-unity); }
+        .cat-dash .card-meta { color: var(--color-dash); }
+        .cat-xr .card-meta { color: var(--color-xr); }
+
+        .card h3 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        /* Modernized Solid CTA Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .cat-p5 .btn { 
+            background: var(--color-p5); 
+        }
+        .cat-p5 .btn:hover { 
+            background: #e11d48;
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.25); 
+        }
+
+        .cat-unity .btn { 
+            background: var(--color-unity); 
+        }
+        .cat-unity .btn:hover { 
+            background: #0284c7;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.25); 
+        }
+
+        .cat-dash .btn { 
+            background: var(--color-dash); 
+        }
+        .cat-dash .btn:hover { 
+            background: #7e22ce;
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.25); 
+        }
+
+        .cat-xr .btn { 
+            background: var(--color-xr); 
+        }
+        .cat-xr .btn:hover { 
+            background: #059669;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.25); 
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 6rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* ==========================================
+           AMBIENTE EMBEDDED (IFRAME VIEWER OVERLAY)
+        ========================================== */
+        .embed-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .embed-bar {
+            height: 50px;
+            background: #0b0d13;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            color: #fff;
+        }
+
+        .embed-title {
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .btn-close-embed {
+            background: #ff0055;
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-close-embed:hover {
+            background: #cc0044;
+        }
+
+        .embed-iframe {
+            width: 100%;
+            flex-grow: 1;
+            border: none;
+            background: #fff;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2rem; }
+            .category-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .container { padding: 3rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="embedViewer" class="embed-container">
+        <div class="embed-bar">
+            <span id="embedTitle" class="embed-title">A carregar projeto...</span>
+            <button class="btn-close-embed" onclick="closeProject()">❌ Voltar ao Portfólio</button>
+        </div>
+        <iframe id="embedFrame" class="embed-iframe" src=""></iframe>
+    </div>
+
+    <div class="container">
+        
+        <header>
+            <h1>Projetos Académicos</h1>
+            <p>Portefólio de projetos desenvolvidos no curso Edições Multimédia Interativas LEM (25/26).</p>
+        </header>
+
+        <main>
+
+            <section id="creative-coding" class="category-section cat-p5">
+                <div class="category-header">
+                    <h2 class="category-title">Creative Coding & 2D Interaction</h2>
+                    <a href="https://github.com/ISTEC-FOR340/MySketches" target="_blank" class="repo-link">📦 Ver Repositório GitHub</a>
+                </div>
+                <div class="grid">
+                    <article class="card">
+                        <div>
+                            <span class="card-meta">Projeto 1 • p5.js</span>
+                            <h3>Circle Matrix</h3>
+                            <p>Transformação de imagens e dados visuais numa matriz interactiva de partículas que respondem dinamicamente ao rato.</p>
+                        </div>
+                        <button onclick="openProject('https://istec-for340.github.io/MySketches/proyecto1/proyecto1.html', 'Circle Matrix')" class="btn">Executar Sketch →</button>
+                    </article>
+
+                    <article class="card">
+                        <div>
+                            <span class="card-meta">Projeto 2 • p5.js</span>
+                            <h3>The Weight of Words</h3>
+                            <p>Exploração tipográfica e interactiva onde os inputs de texto ou interações ganham propriedades físicas no ecrã.</p>
+                        </div>
+                        <button onclick="openProject('https://istec-for340.github.io/MySketches/proyecto2/proyecto2.html', 'The Weight of Words')" class="btn">Executar Sketch →</button>
+                    </article>
+                </div>
+            </section>
+
+            <section id="unity-3d" class="category-section cat-unity">
+                <div class="category-header">
+                    <h2 class="category-title">Unity 3D & Cinemachine</h2>
+                    <a href="https://github.com/ISTEC-FOR340/Cinemachine-WebBuild-itch" target="_blank" class="repo-link">📦 Ver Repositório GitHub</a>
+                </div>
+                <div class="grid">
+                    <article class="card">
+                        <div>
+                            <span class="card-meta">Projeto 3 • Unity WebGL</span>
+                            <h3>Linear Cam Example</h3>
+                            <p>Implementação de caminhos e calhas de câmara inteligentes com o Unity Cinemachine para visualizações dinâmicas.</p>
+                        </div>
+                        <button onclick="openProject('https://istec-for340.itch.io/linearcam-example', 'Linear Cam Example')" class="btn">Jogar no Itch.io 🎮</button>
+                    </article>
+
+                    <article class="card">
+                        <div>
+                            <span class="card-meta">Projeto 4 • Unity WebGL</span>
+                            <h3>Enquadramentos</h3>
+                            <p>Estudo cinematográfico interactivo e troca activa de planos de câmara em tempo real aplicados a um personagem animado.</p>
+                        </div>
+                        <button onclick="openProject('https://istec-for340.itch.io/enquadramentos', 'Enquadramentos')" class="btn">Jogar no Itch.io 🎮</button>
+                    </article>
+                </div>
+            </section>
+
+            <section id="dashboards" class="category-section cat-dash">
+                <div class="category-header">
+                    <h2 class="category-title">Interactive Dashboards & Data</h2>
+                    <a href="https://github.com/ISTEC-FOR340/MyDashboards" target="_blank" class="repo-link">📦 Ver Repositório GitHub</a>
+                </div>
+                <div class="grid">
+                    <article class="card">
+                        <div>
+                            <span class="card-meta">Projeto 5 • Interface</span>
+                            <h3>Weather Dashboard</h3>
+                            <p>Painel de controlo generativo e interface iterativa baseada na monitorização de fluxos e variáveis digitais.</p>
+                        </div>
+                        <button onclick="openProject('https://istec-for340.github.io/MyDashboards/Quilled_cord_2026_05_18_10_26_28/index.html', 'Quilled Cord Systems')" class="btn">Abrir Dashboard →</button>
+                    </article>
+
+                    <article class="card">
+                        <div>
+                            <span class="card-meta">Projeto 6 • Interface</span>
+                            <h3>AI Editor Dashboard</h3>
+                            <p>Exploração estética e visualização analítica através de uma interface web minimalista e especializada.</p>
+                        </div>
+                        <button onclick="openProject('https://istec-for340.github.io/MyDashboards/Candle_sushi_2026_05_18_10_27_00/index.html', 'Candle Sushi Concept')" class="btn">Abrir Dashboard →</button>
+                    </article>
+                </div>
+            </section>
+
+            <section id="webxr" class="category-section cat-xr">
+                <div class="category-header">
+                    <h2 class="category-title">WebXR Space (VR & AR)</h2>
+                    <a href="https://github.com/ISTEC-FOR340/XR" target="_blank" class="repo-link">📦 Ver Repositório GitHub</a>
+                </div>
+                <div class="grid">
+                    <article class="card">
+                        <div>
+                            <span class="card-meta">Projeto 7 • WebVR</span>
+                            <h3>VR 360 Test Explorer</h3>
+                            <p>Visor imersivo com navegação por hotspots e controlo de olhar (Gaze system) desenvolvido sobre a framework A-Frame.</p>
+                        </div>
+                        <button onclick="openProject('https://istec-for340.github.io/VRTest/', 'VR 360 Test Explorer')" class="btn">Lançar Experiência VR →</button>
+                    </article>
+
+                    <article class="card">
+                        <div>
+                            <span class="card-meta">Projeto 8 • WebAR</span>
+                            <h3>Bello AR Experience</h3>
+                            <p>Sistema de Realidade Aumentada baseado em marcadores visuais nativos (AR.js), simulando órbitas físicas tridimensionais.</p>
+                        </div>
+                        <button onclick="openProject('https://istec-for340.github.io/Bello_AR/', 'Bello AR Experience')" class="btn">Abrir Câmara AR →</button>
+                    </article>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Jorge Forero • ISTEC 2026.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function openProject(url, title) {
+            const viewer = document.getElementById('embedViewer');
+            const frame = document.getElementById('embedFrame');
+            const titleSpan = document.getElementById('embedTitle');
+            
+            titleSpan.innerText = "A Executar: " + title;
+            frame.src = url;
+            viewer.style.display = 'flex';
+            document.body.classList.add('modal-open');
+        }
+
+        function closeProject() {
+            const viewer = document.getElementById('embedViewer');
+            const frame = document.getElementById('embedFrame');
+            
+            frame.src = ""; 
+            viewer.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+    </script>
+</body>
+</html>
